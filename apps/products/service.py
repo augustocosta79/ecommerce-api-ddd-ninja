@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 from uuid import UUID
 
 from apps.products.product_entity import Product
@@ -57,7 +58,9 @@ class ProductService:
             raise NotFoundError(f"Product with id {product_id} not found")
         return product
     
-    def list_products_by_category(self, category_id: UUID) -> list[Product]:
+    def list_products_by_category(self, category_id: Optional[UUID] = None) -> list[Product]:
+        if not category_id:
+            return self.repository.list_products()
         return self.repository.list_products_by_category(category_id)
     
     def update_product(self, product_id: UUID, payload: ProductUpdateSchema) -> Product:        

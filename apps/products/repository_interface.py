@@ -12,6 +12,10 @@ class ProductRepositoryInterface(ABC):
         pass
 
     @abstractmethod
+    def list_products(self):
+        pass
+    
+    @abstractmethod
     def list_products_by_category(self):
         pass
 

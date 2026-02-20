@@ -27,6 +27,13 @@ class ProductRepository(ProductRepositoryInterface):
             return None
         return product_model_to_entity(product_data)
     
+    def list_products(self):
+        products_data = ProductModel.objects.all()
+        return [
+            product_model_to_entity(product_data)
+            for product_data in products_data
+        ]
+    
     def list_products_by_category(self, category_id: UUID):
         products_data = ProductModel.objects.filter(categories__id=category_id).prefetch_related("categories").distinct()
         return [
