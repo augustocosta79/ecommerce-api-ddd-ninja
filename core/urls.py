@@ -21,7 +21,19 @@ from django.contrib import admin
 from django.urls import path
 from core.api import api
 
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+from django.http import HttpResponse
+
+
+def prometheus_metrics(request):
+    """
+    Endpoint de métricas para o Prometheus (não aparece na doc da API).
+    """
+    data = generate_latest()
+    return HttpResponse(data, content_type=CONTENT_TYPE_LATEST)
+
 urlpatterns = [
+    path("metrics", prometheus_metrics),
     path("admin/", admin.site.urls),
     path("api/", api.urls),
 ]
