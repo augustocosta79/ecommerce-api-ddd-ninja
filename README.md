@@ -1,56 +1,58 @@
-# API
+# E-commerce API – Clean Architecture & DDD
 
-A API foi desenhada para gerir usuários, imagens e apps do Grupo Gimi.
+## 🚀 Overview
+This project demonstrates a scalable REST API built with Django Ninja,
+designed using Clean Architecture and Domain-Driven Design principles.
 
-## ✔️ Tecnologias usadas
-- Python
-- Django
-- Django Ninja
-- Pydantic
-- PostgreSQL
-- Python Jose
-- Vercel
+The main goal is to ensure data consistency under concurrent requests,
+preventing stock overselling through transactional control and locking strategies.
 
-## 📁 Acesso ao deploy
+---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://engenhadev.com.br/)
+## 🏗 Architecture
 
-## 🔨 Funcionalidades
+- Clean Architecture (Entities, Use Cases, Repositories, API layer)
+- Domain-Driven Design principles
+- Separation of concerns between business rules and framework
 
-- **Gestão de Usuários**: Administração de usuários que podem acessar a API.
-- **Autenticação**: Sistema de tokens para acesso seguro à API.
+```mermaid
+flowchart LR
+    user[Client (Web/Mobile)]
+    api[Django Ninja API (Uvicorn)]
+    db[(PostgreSQL)]
+    prom[Prometheus]
+    graf[Grafana]
+    locust[Locust (Load Testing)]
 
-## 📌 Uso
-
-A API segue os princípios REST para comunicação. Os seguintes endpoints estão disponíveis:
-
-### /users
-- Gerenciar usuários e realizar operações CRUD.
-
-## 🔐 Autenticação
-
-A autenticação é realizada através de JWT. Utilize a rota `/auth/login` para obter um token de acesso, enviando as credenciais do usuário. Utilize este token nas requisições subsequentes para autenticar e para ter acesso aos dados do usuário autenticado utilize a rota `/auth/me`.
-
-## 🛠️ Abrindo e rodando o projeto
-
-Para configurar a API em seu ambiente, siga estas etapas:
-
-1. Clone o repositório do projeto para sua máquina local.
-2. Configure o ambiente virtual para Python e ative-o.
-3. Instale as dependências do projeto
-```bash
-pip install -r requirements.txt
+    user --> api
+    api --> db
+    api -->|/metrics| prom
+    prom --> graf
+    locust --> api
 ```
-1. Configure as variáveis de ambiente necessárias para a conexão com o banco de dados e outras configurações de sistema.
-2. Execute as migrações do banco de dados
+
+---
+
+## 🔒 Concurrency Control
+
+To prevent stock overselling, the system uses:
+
+- Database-level locking
+- Transaction management
+- Concurrency tests simulating parallel purchase attempts
+
+A stress test using threaded requests validates that stock is never reduced below zero.
+
+---
+
+## 🧪 Testing Strategy
+
+- Unit tests for business rules
+- Repository tests
+- End-to-end tests
+- Concurrency stress test
+
+Run tests with:
+
 ```bash
-python manage.py migrate
-```
-1. Crie um super usuário para ter acesso a `/admin/`
-```bash
-python manage.py createsuperuser
-```
-1. Inicie o servidor de desenvolvimento
-```bash
-python manage.py runserver
-```
+make test
