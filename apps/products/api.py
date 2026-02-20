@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
 from apps.products.repository import ProductRepository
@@ -60,7 +60,7 @@ def get_product_by_id(request, product_id: UUID):
         HTTPStatus.INTERNAL_SERVER_ERROR: ErrorSchema,
     },
 )
-def list_products_by_category(request, category_id: UUID = Query(...)):
+def list_products_by_category(request, category_id: Optional[UUID] = Query(None)):
     products = service.list_products_by_category(category_id)
     return [product_to_schema(product) for product in products]
 

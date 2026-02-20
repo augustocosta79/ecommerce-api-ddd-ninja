@@ -31,7 +31,7 @@ SECRET_KEY = str(os.getenv("SECRET_KEY"))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.getenv("DEBUG"))
 
-ALLOWED_HOSTS = str(os.getenv("ALLOWED_HOSTS")).split(" ")
+ALLOWED_HOSTS = str(os.getenv("ALLOWED_HOSTS")).split(",")
 
 
 # Application definition
@@ -64,6 +64,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "utils.prometheus_middleware.PrometheusMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"

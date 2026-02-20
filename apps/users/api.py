@@ -25,6 +25,7 @@ service = UserService(repository=repository, logger=logger)
 
 @users_router.post(
     "",
+    auth=None,
     response={
         HTTPStatus.CREATED: UserSchema,
         HTTPStatus.INTERNAL_SERVER_ERROR: ErrorSchema,

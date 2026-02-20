@@ -44,7 +44,7 @@ class Cart:
     def add_item(self, cart_item: CartItem):
         for item in self._items:
             if item.product.id == cart_item.product.id:
-                item.quantity += cart_item.quantity
+                item._quantity += cart_item.quantity
                 return
         self._items.append(cart_item)
 

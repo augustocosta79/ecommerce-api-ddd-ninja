@@ -1,25 +1,41 @@
-from ninja import NinjaAPI, Redoc
 from http import HTTPStatus
-from apps.shared.exceptions.exceptions import NotFoundError, ConflictError, UnauthorizedError, UnprocessableEntityError, OutOfStockError
-from utils.logger import configure_logger
-from utils.jwt import JWTAuth
+import sys
 
-from apps.authentication.api import authentication_router
-from apps.users.api import users_router
-from apps.healthz.api import healthz_router
-from apps.products.api import products_router
-from apps.categories.api import categories_router
 from apps.addresses.api import address_router
+from apps.authentication.api import authentication_router
 from apps.carts.api import cart_router
+from apps.categories.api import categories_router
+from apps.healthz.api import healthz_router
 from apps.orders.api import orders_router
+from apps.products.api import products_router
+from apps.shared.exceptions.exceptions import (
+    ConflictError,
+    NotFoundError,
+    OutOfStockError,
+    UnauthorizedError,
+    UnprocessableEntityError,
+)
+from apps.users.api import users_router
+from ninja import NinjaAPI, Redoc
+
+from utils.jwt import JWTAuth
+from utils.logger import configure_logger
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+AUTH_ENABLED = os.getenv("AUTH_ENABLED", "true").lower() == "true"
 
 api = NinjaAPI(
     csrf=False,
     title="API",
     version="1.0.0",
     description="This is a API to manage data",
-    # auth=JWTAuth()
+    auth=JWTAuth() if AUTH_ENABLED else None
 )
+
 
 
 api.add_router("/auth", authentication_router, tags=["Authentication"])
@@ -34,7 +50,7 @@ api.add_router("/orders", orders_router, tags=["Orders"])
 # Exception Handlers
 logger = configure_logger("api")
 
-api.exception_handler(Exception)
+@api.exception_handler(Exception)
 def generic_exception_handler(request, exc: Exception):
     logger.error(
         f"Unhandled exception on {request.method} {request.path}: {exc}",
