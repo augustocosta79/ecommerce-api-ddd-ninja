@@ -17,18 +17,18 @@ preventing stock overselling through transactional control and locking strategie
 
 ```mermaid
 flowchart LR
-    user[Client (Web/Mobile)]
-    api[Django Ninja API (Uvicorn)]
+    user["Client"]
+    api["Django Ninja API"]
     db[(PostgreSQL)]
-    prom[Prometheus]
-    graf[Grafana]
-    locust[Locust (Load Testing)]
+    prom["Prometheus"]
+    graf["Grafana"]
+    locust["Locust"]
 
     user --> api
     api --> db
-    api -->|/metrics| prom
+    api -->|"Metrics"| prom
     prom --> graf
-    locust --> api
+    locust -->|"Load Test"| api
 ```
 
 ---
